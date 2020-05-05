@@ -3,6 +3,9 @@ const email = document.getElementById('email');
 const asunto = document.getElementById('asunto');
 const mensaje = document.getElementById('mensaje');
 const btnEnviar = document.getElementById('enviar');
+const formularioEnviar = document.getElementById('enviar-mail');
+const resetBtn = document.getElementById('resetBtn');
+
 
 //Listeners
 eventListeners();
@@ -15,7 +18,15 @@ function eventListeners() {
     email.addEventListener('blur', validarCampo);
     asunto.addEventListener('blur', validarCampo);
     mensaje.addEventListener('blur', validarCampo);
+
+    //Boton enviar en el submit
+   //btnEnviar.addEventListener('click',enviarEmail); 
+    formularioEnviar.addEventListener('submit',enviarEmail); 
+
+    //Boton de reset
+    resetBtn.addEventListener('click',resetFormulario);
 }
+
 
 //Funciones
 function inicioApp() {
@@ -23,7 +34,8 @@ function inicioApp() {
     btnEnviar.disabled = true;
 }
 
-//valida que el campo tenga algo escrito
+
+//Valida que el campo tenga algo escrito
 function validarCampo() {
     //console.log('dentro del input')
 
@@ -44,6 +56,45 @@ function validarCampo() {
     }
 }
 
+
+//Resetear el formulario
+function resetFormulario(e) {
+    formularioEnviar.reset();
+    e.preventDefault();
+}
+
+
+//Cuando se envía el correo
+function enviarEmail(e) {
+    //console.log('Email enviado')
+
+    //Spinner al presionar enviar
+    const spinnerGif = document.querySelector('#spinner');
+    spinnerGif.style.display = 'block';
+
+    //Gif que enví email
+    const enviado = document.createElement('img');
+    enviado.src = 'img/mail.gif';
+    enviado.style.display = 'block';
+
+    //Ocultar spinner y mostrar gif enviado
+    setTimeout(() => {
+        spinnerGif.style.display = 'none';
+
+        document.querySelector('#loaders').appendChild(enviado);
+
+        setTimeout(() => {
+            enviado.remove();
+            formularioEnviar.reset();
+        },5000);
+
+    },3000);
+
+    e.preventDefault();
+}
+
+
+//Verifica la longitud del texto en los campos
 function validarLongitud(campo) {
     //console.log(campo.value.length);
     
@@ -56,6 +107,8 @@ function validarLongitud(campo) {
     }
 }
 
+
+// Verífica que se escriba un texto con un '@' para quesea un email
 function validarEmail(campo) {
     const mensaje = campo.value;
     if(mensaje.indexOf('@') !== -1) { // En caso de que encuentre un @ en el string
